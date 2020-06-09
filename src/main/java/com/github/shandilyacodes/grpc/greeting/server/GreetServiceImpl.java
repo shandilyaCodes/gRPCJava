@@ -5,6 +5,7 @@ import io.grpc.stub.StreamObserver;
 
 public class GreetServiceImpl extends GreetServiceGrpc.GreetServiceImplBase {
 
+    // Unary
     @Override
     public void greet(GreetRequest request, StreamObserver<GreetResponse> responseObserver) {
 
@@ -23,6 +24,7 @@ public class GreetServiceImpl extends GreetServiceGrpc.GreetServiceImplBase {
         responseObserver.onCompleted();
     }
 
+    // Server Streaming
     @Override
     public void greetManyTimes(GreetManyTimesRequest request, StreamObserver<GreetManyTimesResponse> responseObserver) {
         String firstName = request.getGreeting().getFirstName();
@@ -42,6 +44,7 @@ public class GreetServiceImpl extends GreetServiceGrpc.GreetServiceImplBase {
         responseObserver.onCompleted();
     }
 
+    // Client Streaming
     @Override
     public StreamObserver<LongGreetRequest> longGreet(StreamObserver<LongGreetResponse> responseObserver) {
         StreamObserver<LongGreetRequest> requestObserver = new StreamObserver<LongGreetRequest>() {
@@ -62,7 +65,34 @@ public class GreetServiceImpl extends GreetServiceGrpc.GreetServiceImplBase {
             @Override
             public void onCompleted() {
                 // Client is Done!
-                responseObserver.onNext(LongGreetResponse.newBuilder().setResult(result).build());
+                responseObserver.onNext(
+                        LongGreetResponse.newBuilder()
+                                .setResult(result)
+                                .build());
+                responseObserver.onCompleted();
+            }
+        };
+        return requestObserver;
+    }
+
+    // BiDi Streaming
+    @Override
+    public StreamObserver<GreetEveryoneRequest> greetEveryone(StreamObserver<GreetEveryoneResponse> responseObserver) {
+        StreamObserver<GreetEveryoneRequest> requestObserver = new StreamObserver<GreetEveryoneRequest>() {
+            @Override
+            public void onNext(GreetEveryoneRequest value) {
+                String result = "Hello " + value.getGreeting().getFirstName();
+                GreetEveryoneResponse greetEveryoneResponse = GreetEveryoneResponse.newBuilder().setResponse(result).build();
+                responseObserver.onNext(greetEveryoneResponse);
+            }
+
+            @Override
+            public void onError(Throwable t) {
+
+            }
+
+            @Override
+            public void onCompleted() {
                 responseObserver.onCompleted();
             }
         };
