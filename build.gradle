@@ -33,6 +33,8 @@ dependencies {
     implementation 'io.grpc:grpc-netty-shaded:1.29.0'
     implementation 'io.grpc:grpc-protobuf:1.29.0'
     implementation 'io.grpc:grpc-stub:1.29.0'
+    compile 'io.grpc:grpc-services:1.29.0'
+    compile group: 'org.mongodb', name: 'mongodb-driver-sync', version: '4.0.3'
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 

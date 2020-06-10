@@ -1,25 +1,23 @@
-package com.github.shandilyacodes.grpc.calculator.server;
+package com.github.shandilyacodes.grpc.blog.server;
 
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
-import io.grpc.protobuf.services.ProtoReflectionService;
-
 import java.io.IOException;
 
-public class CalculatorServer {
+public class BlogServer {
+
     public static void main(String[] args) throws IOException, InterruptedException {
-        Server server = ServerBuilder
-                .forPort(50053)
-                .addService(new CalculatorServiceImpl())
-                .addService(ProtoReflectionService.newInstance())
+        Server server = ServerBuilder.forPort(50051)
+                .addService(new BlogServiceImpl())
                 .build();
         server.start();
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             System.out.println("Received Shutdown Request!");
             server.shutdown();
-            System.out.println("Successfully stopped the Server!");
+            System.out.println("Successfully stopped the server!");
         }));
+
         server.awaitTermination();
     }
 }
